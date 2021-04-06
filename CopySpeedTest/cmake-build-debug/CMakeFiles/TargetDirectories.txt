@@ -1,3 +1,0 @@
-C:/Workspace/open_pearl_projektarbeit/CopySpeedTest/cmake-build-debug/CMakeFiles/CopySpeedTest.dir
-C:/Workspace/open_pearl_projektarbeit/CopySpeedTest/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/Workspace/open_pearl_projektarbeit/CopySpeedTest/cmake-build-debug/CMakeFiles/rebuild_cache.dir
