@@ -52,8 +52,8 @@ int copyFile(){
     // Cast into milliseconds
     int write_time_in_ms = std::chrono::duration_cast<std::chrono::milliseconds>(difference).count();
 
-    std::cout << "\nFile copied successfully.";
-    std::cout << "Read Time: " << read_time_in_ms << "ms\n" << std::endl;
+    std::cout << "\nFile copied successfully." << std::endl;
+    std::cout << "Read Time: " << read_time_in_ms << "ms" << std::endl;
     std::cout << "Write Time: " << write_time_in_ms << "ms" << std::endl;
     std::cout << "Total Time: " << read_time_in_ms+write_time_in_ms << "ms" << std::endl;
 
