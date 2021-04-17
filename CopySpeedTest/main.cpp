@@ -11,7 +11,7 @@ void* copyFile( void* help){ char ch, sourceFile[80], targetFile[80];
     FILE *fs, *ft;
     std::chrono::high_resolution_clock::time_point start, end;
     std::chrono::high_resolution_clock::duration difference;
-    int read, write, open, close;
+    int read, write, open, close, writeraw, readraw;
     
     start = std::chrono::high_resolution_clock::now();
     fs = fopen("/media/marcel/B282A48982A4539F/open_pearl_projektarbeit-main/testfiles/5mb", "r");
@@ -81,11 +81,18 @@ void* copyFile( void* help){ char ch, sourceFile[80], targetFile[80];
     end = std::chrono::high_resolution_clock::now();
     difference = end - start;
     write = std::chrono::duration_cast<std::chrono::milliseconds>(difference).count();
-     
+    writeraw = (float)write - (float)read - (float)open/1000 - (float)close/1000;
+    readraw = (float)read - (float)open/1000 - (float)close/1000;
+    
     std::cout << "Open Took: " << open << "µs." << std::endl;
-    std::cout << "Close Took: " << close << "µs." << std::endl;
+    std::cout << "Close Took: " << close << "µs.\n" << std::endl;
+    
     std::cout << "Read Took: " << read << "ms." << std::endl;
-    std::cout << "Write Took: " << write << "ms." << std::endl;
+    std::cout << "Write Took: " << write << "ms.\n" << std::endl;
+    
+    std::cout << "Read_raw Took: " << readraw << "ms" << std::endl;
+    std::cout << "Write_raw Took: " << writeraw << "ms" << std::endl;
+    
     std::cout << "\nFile copied successfully." << std::endl;
 
     return nullptr;
