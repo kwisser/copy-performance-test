@@ -81,8 +81,8 @@ void* copyFile( void* help){ char ch, sourceFile[80], targetFile[80];
     end = std::chrono::high_resolution_clock::now();
     difference = end - start;
     write = std::chrono::duration_cast<std::chrono::milliseconds>(difference).count();
-    writeraw = (float)write - (float)read - (float)open/1000 - (float)close/1000;
     readraw = (float)read - (float)open/1000 - (float)close/1000;
+    writeraw = write - read;
     
     std::cout << "Open Took: " << open << "µs." << std::endl;
     std::cout << "Close Took: " << close << "µs.\n" << std::endl;
