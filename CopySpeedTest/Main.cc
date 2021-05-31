@@ -29,7 +29,7 @@ char targetPath[PATH_MAX];
 
 void* copyFileSpeed( void* help){
     FILE *fileSource, *fileTarget;
-    char ch, sourceFile[80], targetFile[80];
+    char ch;
     std::chrono::high_resolution_clock::time_point start, end;
     std::chrono::high_resolution_clock::duration difference;
     int read, write, open, close, writeraw, readraw;
