@@ -17,11 +17,10 @@ char FILENAME_50[16] = "testfiles/50mb";
 char FILENAME_100[16] = "testfiles/100mb";
 char COPIEDFILENAME[16] = "copied";
 
-int *workaround;
-int fd;
-int nread = 1;
+int *workaround; //name is self explanatory
+int fd; //fd stands for file descriptor
+int nread = 1; //this variable represents the return value of the io-thread
 int start = 1;
-int nread1 = 1;
 char buf[10];
 char sourcePath[PATH_MAX];
 char targetPath[PATH_MAX];
@@ -121,13 +120,6 @@ void *help(void *a) {
     return nullptr;
 }
 
-void *test(void *a) {
-    printf("in cont read thread");
-    while (nread1 > 0)nread1 = read(fd, &buf, sizeof(buf));
-    printf("finished");
-    return nullptr;
-}
-
 void *copyFile(void *help) {
     workaround = &errno;
     start = 0;
@@ -144,7 +136,7 @@ int startCopySpeedTest(){
     pthread_t test_thread; int rc_speed;
     copyFileSpeed(nullptr);
     std::cout << "\n\n\nThreads\n" << std::endl;
-    rc_speed = pthread_create(&test_thread, NULL, copyFile, NULL);
+    rc_speed = pthread_create(&test_thread, NULL, copyFileSpeed, NULL);
     if (rc_speed) {
         printf("Error:unable to create thread, %d\n", rc_speed);
         exit(-1);
@@ -205,12 +197,6 @@ int main() {
     act.sa_flags = 0;
 
     sigaction(SIGALRM, &act, NULL);
-
-    rd = pthread_create(&te, NULL, test, NULL);
-    if (rd) {
-        printf("Error:unable to create thread, %d\n", rc);
-        _exit(-1);
-    }
 
     rc = pthread_create(&tt, NULL, copyFile, NULL);
     if (rc) {
