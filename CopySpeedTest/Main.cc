@@ -11,11 +11,11 @@
 #include <pthread.h>
 #include <string.h>
 
-char FILENAME_5[16] = "testfiles/5mb";
-char FILENAME_10[16] = "testfiles/10mb";
-char FILENAME_50[16] = "testfiles/50mb";
-char FILENAME_100[16] = "testfiles/100mb";
-char COPIEDFILENAME[16] = "copied";
+char FILENAME_5MB[16] = "testfiles/5mb";
+char FILENAME_10MB[16] = "testfiles/10mb";
+char FILENAME_50MB[16] = "testfiles/50mb";
+char FILENAME_100MB[16] = "testfiles/100mb";
+char COPIED_FILENAME[16] = "copied";
 
 int *workaround; //name is self explanatory
 int fd; //fd stands for file descriptor
@@ -52,10 +52,6 @@ void* copyFileSpeed( void* help){
     // Start Time
     start = std::chrono::high_resolution_clock::now();
     fileSource = fopen(sourcePath, "r");
-    if(fileSource == NULL) {
-        std::cout<<"\nError Occurred!";
-        return 0;
-    }
 
     ch = fgetc(fileSource);
     while(ch != EOF) {
@@ -70,10 +66,6 @@ void* copyFileSpeed( void* help){
     start = std::chrono::high_resolution_clock::now();
 
     fileSource = fopen(sourcePath, "r");
-    if(fileSource == NULL) {
-        std::cout<<"\nError Occurred!";
-        return 0;
-    }
 
     fileTarget = fopen(targetPath, "w");
     if(fileTarget == NULL) {
@@ -129,9 +121,6 @@ void *copyFile(void *help) {
 }
 
 int startCopySpeedTest(){
-
-    // --------------------------------- Copy File Speed Start -----------------------------
-
     std::cout << "Copy File Speed Test" << std::endl;
     pthread_t test_thread; int rc_speed;
     copyFileSpeed(nullptr);
@@ -142,15 +131,13 @@ int startCopySpeedTest(){
         exit(-1);
     }
     pthread_join(test_thread, NULL);
-    // ---------------------------------Copy File Speed End -----------------------------
     return 0;
 }
 
-int main() {
+void getCurrentWorkingDirectory(){
     int user_file_size;
     char cwd[PATH_MAX];
 
-    // File Size
     printf("Choose File Size: 5mb(1) 10mb(2) 50mb(3) 100mb(4)\n");
     scanf("%d",&user_file_size);
 
@@ -159,37 +146,37 @@ int main() {
 
         strncpy(sourcePath, cwd, strlen(cwd)-13);
         if(user_file_size == 1){
-            strcat(sourcePath, FILENAME_5);
+            strcat(sourcePath, FILENAME_5MB);
         }
         if(user_file_size == 2){
-            strcat(sourcePath, FILENAME_10);
+            strcat(sourcePath, FILENAME_10MB);
         }
         if(user_file_size == 3){
-            strcat(sourcePath, FILENAME_50);
+            strcat(sourcePath, FILENAME_50MB);
         }
         if(user_file_size == 4){
-            strcat(sourcePath, FILENAME_100);
+            strcat(sourcePath, FILENAME_100MB);
         }
 
-
         strcat(targetPath, sourcePath);
-        strcat(targetPath, COPIEDFILENAME);
-
+        strcat(targetPath, COPIED_FILENAME);
 
         printf("File to Copy: %s\n", sourcePath);
         std::cout << "Target Path: " << targetPath << std::endl;
 
     } else {
         perror("getcwd() error");
-        return 1;
     }
-    // File Size end
+}
+
+int main() {
+
+    getCurrentWorkingDirectory();
+    startCopySpeedTest();
 
     fd = open(sourcePath, O_RDONLY);
-
     pthread_t tt, te, tb;
     int rc, rd, d;
-
     struct sigaction act;
 
     sigemptyset(&act.sa_mask);
@@ -212,9 +199,4 @@ int main() {
 
     pthread_join(tt, NULL);
     printf("\n%d %d\n", nread, *workaround);
-
-    std::cout << std::endl;
-
-    startCopySpeedTest();
-
 }
