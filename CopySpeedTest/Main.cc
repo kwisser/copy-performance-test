@@ -106,7 +106,7 @@ void handler(int s) {
     return;
 }
 
-void *help(void *a) {
+void *kill_thread(void *a) {
     while (start);
     pthread_kill((pthread_t) a, SIGALRM);
     return nullptr;
@@ -144,6 +144,7 @@ void getCurrentWorkingDirectory(){
     if (getcwd(cwd, sizeof(cwd)) != NULL) {
         printf("Current working dir: %s\n", cwd);
 
+        // Current Working -13 to get only the "Base Project Folder"
         strncpy(sourcePath, cwd, strlen(cwd)-13);
         if(user_file_size == 1){
             strcat(sourcePath, FILENAME_5MB);
@@ -175,7 +176,7 @@ int main() {
     startCopySpeedTest();
 
     fd = open(sourcePath, O_RDONLY);
-    pthread_t tt, te, tb;
+    pthread_t thread_1, thread_2;
     int rc, rd, d;
     struct sigaction act;
 
@@ -185,18 +186,18 @@ int main() {
 
     sigaction(SIGALRM, &act, NULL);
 
-    rc = pthread_create(&tt, NULL, copyFile, NULL);
+    rc = pthread_create(&thread_1, NULL, copyFile, NULL);
     if (rc) {
         printf("Error:unable to create thread, %d\n", rc);
         _exit(-1);
     }
 
-    d = pthread_create(&tb, NULL, help, (void *) tt);
+    d = pthread_create(&thread_2, NULL, kill_thread, (void *) thread_1);
     if (d) {
         printf("Error:unable to create thread, %d\n", rd);
         _exit(-1);
     }
 
-    pthread_join(tt, NULL);
+    pthread_join(thread_1, NULL);
     printf("\n%d %d\n", n_read, *workaround);
 }
