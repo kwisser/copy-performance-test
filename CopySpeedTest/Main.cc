@@ -19,7 +19,7 @@ char COPIED_FILENAME[16] = "copied";
 
 int *workaround; //name is self explanatory
 int fd; //fd stands for file descriptor
-int nread = 1; //this variable represents the return value of the io-thread
+int n_read = 1; //this variable represents the return value of the io-thread
 int start = 1;
 char buf[10];
 char sourcePath[PATH_MAX];
@@ -31,7 +31,7 @@ void* copyFileSpeed( void* help){
     char ch;
     std::chrono::high_resolution_clock::time_point start, end;
     std::chrono::high_resolution_clock::duration difference;
-    int read, write, open, close, writeraw, readraw;
+    int read, write, open, close, write_raw, read_raw;
 
     start = std::chrono::high_resolution_clock::now();
     fileSource = fopen(sourcePath, "r");
@@ -84,8 +84,8 @@ void* copyFileSpeed( void* help){
     end = std::chrono::high_resolution_clock::now();
     difference = end - start;
     write = std::chrono::duration_cast<std::chrono::milliseconds>(difference).count();
-    readraw = (float)read - (float)open/1000 - (float)close/1000;
-    writeraw = write - read;
+    read_raw = (float)read - (float)open/1000 - (float)close/1000;
+    write_raw = write - read;
 
     std::cout << "Open Took: " << open << "µs." << std::endl;
     std::cout << "Close Took: " << close << "µs.\n" << std::endl;
@@ -93,8 +93,8 @@ void* copyFileSpeed( void* help){
     std::cout << "Read Took: " << read << "ms." << std::endl;
     std::cout << "Write Took: " << write << "ms.\n" << std::endl;
 
-    std::cout << "Read_raw Took: " << readraw << "ms" << std::endl;
-    std::cout << "Write_raw Took: " << writeraw << "ms" << std::endl;
+    std::cout << "Read_raw Took: " << read_raw << "ms" << std::endl;
+    std::cout << "Write_raw Took: " << write_raw << "ms" << std::endl;
 
     std::cout << "\nFile copied successfully." << std::endl;
 
@@ -102,7 +102,7 @@ void* copyFileSpeed( void* help){
 }
 
 void handler(int s) {
-    printf("\ninterrupt by signal handler\n%d\n", nread);
+    printf("\ninterrupt by signal handler\n%d\n", n_read);
     return;
 }
 
@@ -115,8 +115,8 @@ void *help(void *a) {
 void *copyFile(void *help) {
     workaround = &errno;
     start = 0;
-    while (nread > 0)
-        nread = write(STDOUT_FILENO, &buf, sizeof(buf));
+    while (n_read > 0)
+        n_read = write(STDOUT_FILENO, &buf, sizeof(buf));
     return nullptr;
 }
 
@@ -165,7 +165,7 @@ void getCurrentWorkingDirectory(){
         std::cout << "Target Path: " << targetPath << std::endl;
 
     } else {
-        perror("getcwd() error");
+        perror("get_cwd() error");
     }
 }
 
@@ -198,5 +198,5 @@ int main() {
     }
 
     pthread_join(tt, NULL);
-    printf("\n%d %d\n", nread, *workaround);
+    printf("\n%d %d\n", n_read, *workaround);
 }
