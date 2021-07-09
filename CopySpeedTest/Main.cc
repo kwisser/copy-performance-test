@@ -177,7 +177,7 @@ int main() {
 
     fd = open(sourcePath, O_RDONLY);
     pthread_t thread_1, thread_2;
-    int rc, rd, d;
+    int rc, rd;
     struct sigaction act;
 
     sigemptyset(&act.sa_mask);
@@ -192,8 +192,8 @@ int main() {
         _exit(-1);
     }
 
-    d = pthread_create(&thread_2, NULL, kill_thread, (void *) thread_1);
-    if (d) {
+    rd = pthread_create(&thread_2, NULL, kill_thread, (void *) thread_1);
+    if (rd) {
         printf("Error:unable to create thread, %d\n", rd);
         _exit(-1);
     }
