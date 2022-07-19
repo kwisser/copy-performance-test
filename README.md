@@ -1,1 +1,1 @@
-# Open pearl case studie
+# Open Pearl case studie - copy performance test
