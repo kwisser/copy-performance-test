@@ -1,1 +1,1 @@
-# open_pearl_projektarbeit
+# Open pearl case studie
